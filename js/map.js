@@ -108,10 +108,26 @@ function initialize() {
 
   for (var i=0; i<segments.length; i++) {
     var addSegment = function(segmentData) {
-      // eg: [5490.0, [[42.71946, -71.20996], [42.71941, -71.20972], ...]
       var paths = segmentData[1];
+
+      // eg: [5490.0, [[42.71946, -71.20996], [42.71941, -71.20972], ...]
+      var x1 = paths[0][0];
+      var y1 = paths[0][1];
+      var x2 = paths[1][0];
+      var y2 = paths[1][1];
+      var dx = x1-x2;
+      var dy = y1-y2;
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      dx = dx/dist;
+      dy = dy/dist;
+      var offset = 0.0;
+      x3 = x1 + offset * dy;
+      y3 = y1 - offset * dx;
+      x4 = x1 - offset * dy;
+      y4 = y1 + offset * dx;
+
       var segment = paths.map(function(point) {
-        return new google.maps.LatLng(point[0], point[1]);
+        return new google.maps.LatLng(point[0] + (offset * dy), point[1] - (offset * dx));
       });
 
       var path = new google.maps.Polyline({
