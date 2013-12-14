@@ -13,6 +13,11 @@ body {
 }
 #chart {
   float: right;
-  height: 100%;
+  height: 50%;
+  width: 50%;
+}
+#carbonChart {
+  float: right;
+  height: 50%;
   width: 50%;
 }

@@ -23,6 +23,29 @@ var pathClick = function(pairId) {
 
    return chart;
   });
+
+  // Add Carbon Chart
+  nv.addGraph(function() {
+   var chart = nv.models.lineChart();
+
+   chart.xAxis
+       .axisLabel('Time')
+       .tickFormat(d3.format(',r'));
+
+   chart.yAxis
+       .axisLabel('Travel Time (minutes)')
+       .tickFormat(d3.format('.0f'));
+
+   d3.select('#carbonChart svg')
+       .datum(sinAndCos())
+     .transition().duration(500)
+       .call(chart);
+
+   nv.utils.windowResize(function() { d3.select('#carbonChart svg').call(chart) });
+
+   return chart;
+  });
+
   
   /**************************************
   * Simple test data generator
