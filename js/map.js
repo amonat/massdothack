@@ -1,6 +1,7 @@
 var map;
-var roadSegmentStrokeColor = '#FF0000';
-var selectedRoadSegmentStrokeColor = '#00FF00';
+var roadSegmentStrokeColor = 'rgb(99,76,124)';
+var selectedRoadSegmentStrokeColor = '#ff0000';
+var highlightedRoadSegmentStrokeColor = '#00ff00';
 
 var pathClick = function(path) {
   console.log(path.pairId);
@@ -83,10 +84,20 @@ var pathClick = function(path) {
      }
     ];
   }
-}
+};
+
+var pathMouseover = function(path) {
+  console.log("mouseover " + path.pairId);
+  if (highlightedRouteSegment) {
+    highlightedRouteSegment.setOptions({strokeColor: (highlightedRouteSegment == selectedRouteSegment ? selectedRoadSegmentStrokeColor : roadSegmentStrokeColor)});
+  }
+  highlightedRouteSegment = routeSegments[path.pathIndex];
+  highlightedRouteSegment.setOptions({strokeColor: highlightedRoadSegmentStrokeColor});
+};
 
 var routeSegments = [];
 var selectedRouteSegment = null;
+var highlightedRouteSegment = null;
 
 function initialize() {
   var mapOptions = {
@@ -106,7 +117,7 @@ function initialize() {
       var path = new google.maps.Polyline({
         path: segment,
         geodesic: true,
-        strokeColor: 'rgb(99,76,124)',
+        strokeColor: roadSegmentStrokeColor,
         strokeOpacity: 0.8,
         strokeWeight: 2,
         pairId: segmentData[0],
@@ -114,6 +125,9 @@ function initialize() {
       });
       google.maps.event.addListener(path, 'click', function() {
         pathClick(path);
+      });
+      google.maps.event.addListener(path, 'mouseover', function() {
+        pathMouseover(path);
       });
       path.setMap(map);
       routeSegments.push(path);
