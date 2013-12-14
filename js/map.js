@@ -9,9 +9,10 @@ var pathClick = function(path) {
     selectedRouteSegment.setOptions({strokeColor: roadSegmentStrokeColor})
   }
   selectedRouteSegment = routeSegments[path.pathIndex];
-  selectedRouteSegment.setOptions({strokeColor: selectedRoadSegmentStrokeColor});
+  selectedRouteSegment.setOptions({strokeColor: selectedRoadSegmentStrokeColor, strokeOpacity: 1.0});
 
   $('#chart svg').children().remove()
+  $('#carbonChart svg').children().remove()
 
   // Add Travel Chart
   nv.addGraph(function() {
@@ -86,15 +87,20 @@ var pathClick = function(path) {
   }
 };
 
+var highlightedRouteSegment;
 var pathMouseover = function(path) {
-  console.log("mouseover " + path.pairId);
   if (highlightedRouteSegment) {
-    highlightedRouteSegment.setOptions({strokeColor: (highlightedRouteSegment == selectedRouteSegment ? selectedRoadSegmentStrokeColor : roadSegmentStrokeColor)});
+    removePathMouseover(path);
   }
   highlightedRouteSegment = routeSegments[path.pathIndex];
-  highlightedRouteSegment.setOptions({strokeColor: highlightedRoadSegmentStrokeColor});
+  highlightedRouteSegment.setOptions({strokeColor: highlightedRoadSegmentStrokeColor, strokeOpacity: 1.0});
 };
-
+var removePathMouseover = function(path) {
+  if (highlightedRouteSegment) {
+    highlightedRouteSegment.setOptions({strokeColor: (highlightedRouteSegment == selectedRouteSegment ? selectedRoadSegmentStrokeColor : roadSegmentStrokeColor)});
+    highlightedRouteSegment.setOptions({strokeOpacity: (highlightedRouteSegment == selectedRouteSegment ? 1.0 : 0.5)});
+  }
+}
 var routeSegments = [];
 var selectedRouteSegment = null;
 var highlightedRouteSegment = null;
@@ -118,7 +124,7 @@ function initialize() {
         path: segment,
         geodesic: true,
         strokeColor: roadSegmentStrokeColor,
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.5,
         strokeWeight: 2,
         pairId: segmentData[0],
         pathIndex: i
@@ -128,6 +134,9 @@ function initialize() {
       });
       google.maps.event.addListener(path, 'mouseover', function() {
         pathMouseover(path);
+      });
+      google.maps.event.addListener(path, 'mouseout', function() {
+        removePathMouseover(path);
       });
       path.setMap(map);
       routeSegments.push(path);
