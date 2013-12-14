@@ -1,7 +1,7 @@
 var map;
 var roadSegmentStrokeColor = 'rgb(99,76,124)';
-var selectedRoadSegmentStrokeColor = '#ff0000';
-var highlightedRoadSegmentStrokeColor = '#00ff00';
+var selectedRoadSegmentStrokeColor = 'rgb(197,253,115)';
+var highlightedRoadSegmentStrokeColor = 'rgb(232,186,180)';
 
 var pathClick = function(path) {
   console.log(path.pairId);
