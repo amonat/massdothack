@@ -42,34 +42,151 @@ var pathClick = function(path) {
 
    chart.xAxis
        .axisLabel('Time')
-       .tickFormat(d3.format(',r'));
+       .tickFormat(d3.format('.0f'));
 
    chart.yAxis
        .axisLabel('Travel Time (minutes)')
        .tickFormat(d3.format('.0f'));
 
    d3.select('#carbonChart svg')
-       .datum(sinAndCos())
+       .datum(sinAndCosCarbon())
      .transition().duration(500)
        .call(chart);
 
    nv.utils.windowResize(function() { d3.select('#carbonChart svg').call(chart) });
 
    return chart;
+  
   });
-
   
   /**************************************
   * Simple test data generator
   */
 
   function sinAndCos() {
+    var avg = [],
+       min = [],
+       max = [];
+
+    for (var i = 0; i < data.length; i++) {
+      if (data[i][0] === path.pairId) {
+        var rowDate = new Date (new Date().toDateString() + ' ' + data[i][1]);
+        var minutes = 5*Math.floor(rowDate.getMinutes()/5);
+        var rowDate = rowDate.getHours()*60+minutes;
+        if ( (0 < data[i][3]/60) && (data[i][3]/60 < 10) ) {
+          if (typeof rowDate !== 'undefined') {
+            avg.push({x: rowDate, y: data[i][2]/60});
+          }
+        }
+        if ( (0 < data[i][3]/60) && (data[i][3]/60 < 7) ) {
+          if (typeof rowDate !== 'undefined') {
+            min.push({x: rowDate, y: data[i][3]/60});
+          }
+        }
+        if ( (5 < data[i][3]/60) && (data[i][3]/60 < 5000) ) {
+          if (typeof rowDate !== 'undefined') {
+            max.push({x: rowDate, y: data[i][4]/60});
+          }
+        }
+      }
+    }
+
+    return [
+     {
+       values: avg,
+       key: 'Average',
+       color: 'lightgrey'
+     },
+     {
+       values: min,
+       key: 'Minimum',
+       color: 'rgb(114,147,50)'
+     },
+     {
+       values: max,
+       key: 'Maxium',
+       color: 'rgb(231,186,179)'
+     }
+
+    ];
+  }
+  
+  function sinAndCosCarbon() {
+    var avg = [],
+       min = [],
+       max = [];
+
+    var averageMpg = 23.1;
+    var averageGph = 60/averageMpg;
+    var mmBtuPerGallon = 0.125;
+    var kgCO2mmBtu = 70.22;
+    var kgCH4mmBtu = 0.003;
+    var kgN2OmmBtu = 0.0006;
+
+    for (var i = 0; i < data.length; i++) {
+      if (data[i][0] === path.pairId) {
+        var rowDate = new Date (new Date().toDateString() + ' ' + data[i][1]);
+        var rowDate = rowDate.getHours()*60+rowDate.getMinutes();
+        
+        var avgCO2Kg = data[i][2]/60/60*averageGph*mmBtuPerGallon*kgCO2mmBtu;
+        var avgCH4Kg = data[i][2]/60/60*averageGph*mmBtuPerGallon*kgCH4mmBtu;
+        var avgN2OKg = data[i][2]/60/60*averageGph*mmBtuPerGallon*kgN2OmmBtu;
+        var avgKg = avgCO2Kg+avgCH4Kg+avgN2OKg;
+
+        var minCO2Kg = data[i][3]/60/60*averageGph*mmBtuPerGallon*kgCO2mmBtu;
+        var minCH4Kg = data[i][3]/60/60*averageGph*mmBtuPerGallon*kgCH4mmBtu;
+        var minN2OKg = data[i][3]/60/60*averageGph*mmBtuPerGallon*kgN2OmmBtu;
+        var minKg = minCO2Kg+minCH4Kg+minN2OKg;
+        
+        var maxCO2Kg = data[i][4]/60/60*averageGph*mmBtuPerGallon*kgCO2mmBtu;
+        var maxCH4Kg = data[i][4]/60/60*averageGph*mmBtuPerGallon*kgCH4mmBtu;
+        var maxN2OKg = data[i][4]/60/60*averageGph*mmBtuPerGallon*kgN2OmmBtu;
+        var maxKg = maxCO2Kg+maxCH4Kg+maxN2OKg;
+        
+        if ( (0 < data[i][3]/60) && (data[i][3]/60 < 10) ) {
+          if (typeof rowDate !== 'undefined') {
+            avg.push({x: rowDate, y: avgKg});
+          }
+        }
+        if ( (0 < data[i][3]/60) && (data[i][3]/60 < 7) ) {
+          if (typeof rowDate !== 'undefined') {
+            min.push({x: rowDate, y: minKg});
+          }
+        }
+        if ( (5 < data[i][3]/60) && (data[i][3]/60 < 5000) ) {
+          if (typeof rowDate !== 'undefined') {
+            max.push({x: rowDate, y: maxKg});
+          }
+        }
+      }
+    }
+
+    return [
+     {
+       values: avg,
+       key: 'Average',
+       color: 'lightgrey'
+     },
+     {
+       values: min,
+       key: 'Minimum',
+       color: 'rgb(114,147,50)'
+     },
+     {
+       values: max,
+       key: 'Maxium',
+       color: 'rgb(231,186,179)'
+     }
+
+    ];
+  
     var sin = [],
-       cos = [];
+        cos = [];
 
     for (var i = 0; i < 100; i++) {
-     sin.push({x: i, y: Math.sin(i/10)});
-     cos.push({x: i, y: .5 * Math.cos(i/10)});
+
+      
+      sin.push({x: i, y: kg});
     }
 
     return [
@@ -85,6 +202,7 @@ var pathClick = function(path) {
      }
     ];
   }
+
 };
 
 var highlightedRouteSegment;
