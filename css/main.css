@@ -12,6 +12,11 @@ body {
   width: 50%;
   float: left;
 }
+#chartContainer {
+  height: 100%;
+  margin-left:2.0em;
+  margin-top:0.5em;
+}
 #chart {
   float: right;
   height: 50%;

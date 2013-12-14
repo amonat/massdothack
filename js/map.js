@@ -93,9 +93,9 @@ var pathClick = function(path) {
 
     return [
      {
-       values: avg,
-       key: 'Average',
-       color: 'lightgrey'
+       values: max,
+       key: 'Maxium',
+       color: 'rgb(231,186,179)'
      },
      {
        values: min,
@@ -103,9 +103,9 @@ var pathClick = function(path) {
        color: 'rgb(114,147,50)'
      },
      {
-       values: max,
-       key: 'Maxium',
-       color: 'rgb(231,186,179)'
+       values: avg,
+       key: 'Average',
+       color: 'grey'
      }
 
     ];
@@ -153,7 +153,7 @@ var pathClick = function(path) {
             min.push({x: rowDate, y: minKg});
           }
         }
-        if ( (5 < data[i][3]/60) && (data[i][3]/60 < 5000) ) {
+        if ( (3 < data[i][3]/60) && (data[i][3]/60 < 5000) ) {
           if (typeof rowDate !== 'undefined') {
             max.push({x: rowDate, y: maxKg});
           }
@@ -163,20 +163,20 @@ var pathClick = function(path) {
 
     return [
      {
-       values: avg,
-       key: 'Average',
-       color: 'lightgrey'
+       values: max,
+       key: 'Maxium',
+       color: 'rgb(231,186,179)'
      },
      {
        values: min,
        key: 'Minimum',
-       color: 'rgb(114,147,50)'
+       color: 'rgb(155,187,84)'
      },
      {
-       values: max,
-       key: 'Maxium',
-       color: 'rgb(231,186,179)'
-     }
+       values: avg,
+       key: 'Average',
+       color: 'grey'
+     },
 
     ];
   
