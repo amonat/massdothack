@@ -166,19 +166,27 @@ function initialize() {
 
 
   for (var i=0; i<segments.length; i++) {
-    var segment = [
-      new google.maps.LatLng(segments[i][1], segments[i][2]),
-      new google.maps.LatLng(segments[i][3], segments[i][4])
-    ];
+    var addSegment = function(segmentData) {
+      var segment = [
+        new google.maps.LatLng(segmentData[1], segmentData[2]),
+        new google.maps.LatLng(segmentData[3], segmentData[4])
+      ];
 
-    var path = new google.maps.Polyline({
-      path: segment,
-      geodesic: true,
-      strokeColor: '#FF0000',
-      strokeOpacity: 1.0,
-      strokeWeight: 2
-    });
-    path.setMap(map);
+      var path = new google.maps.Polyline({
+        path: segment,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        pairId: segmentData[0]
+      });
+      google.maps.event.addListener(path, 'click', function() {
+        console.log('clicked on pair id ' + path.pairId);
+      });
+      path.setMap(map);
+
+    };
+    addSegment(segments[i]);
   }
 }
 google.maps.event.addDomListener(window, 'load', initialize);
