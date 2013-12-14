@@ -106,8 +106,8 @@ function initialize() {
       var path = new google.maps.Polyline({
         path: segment,
         geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
+        strokeColor: 'rgb(99,76,124)',
+        strokeOpacity: 0.8,
         strokeWeight: 2,
         pairId: segmentData[0],
         pathIndex: i
