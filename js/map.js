@@ -61,10 +61,11 @@ function initialize() {
 
   for (var i=0; i<segments.length; i++) {
     var addSegment = function(segmentData) {
-      var segment = [
-        new google.maps.LatLng(segmentData[1], segmentData[2]),
-        new google.maps.LatLng(segmentData[3], segmentData[4])
-      ];
+      // eg: [5490.0, [[42.71946, -71.20996], [42.71941, -71.20972], ...]
+      var paths = segmentData[1];
+      var segment = paths.map(function(point) {
+        return new google.maps.LatLng(point[0], point[1]);
+      });
 
       var path = new google.maps.Polyline({
         path: segment,
