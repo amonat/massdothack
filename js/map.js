@@ -1,7 +1,19 @@
 var map;
-var pathClick = function(pairId) {
-  console.log(pairId);
+
+var roadSegmentStrokeColor = '#FF0000';
+var selectedRoadSegmentStrokeColor = '#00FF00';
+
+var pathClick = function(path) {
+  console.log(path.pairId);
+  if (selectedRouteSegment) {
+    selectedRouteSegment.setOptions({strokeColor: roadSegmentStrokeColor})
+  }
+  selectedRouteSegment = routeSegments[path.pathIndex];
+  selectedRouteSegment.setOptions({strokeColor: selectedRoadSegmentStrokeColor});
 }
+
+var routeSegments = [];
+var selectedRouteSegment = null;
 
 function initialize() {
   var mapOptions = {
@@ -24,13 +36,14 @@ function initialize() {
         strokeColor: '#FF0000',
         strokeOpacity: 1.0,
         strokeWeight: 2,
-        pairId: segmentData[0]
+        pairId: segmentData[0],
+        pathIndex: i
       });
       google.maps.event.addListener(path, 'click', function() {
-        pathClick(path.pairId);
+        pathClick(path);
       });
       path.setMap(map);
-
+      routeSegments.push(path);
     };
     addSegment(segments[i]);
   }
