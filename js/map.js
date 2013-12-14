@@ -20,7 +20,7 @@ var pathClick = function(path) {
 
    chart.xAxis
        .axisLabel('Time')
-       .tickFormat(d3.format(',r'));
+       .tickFormat(function(d) { return "" + Math.floor(d/60) + ":" + (d % 60) }).ticks(12);
 
    chart.yAxis
        .axisLabel('Travel Time (minutes)')
@@ -42,7 +42,7 @@ var pathClick = function(path) {
 
    chart.xAxis
        .axisLabel('Time')
-       .tickFormat(d3.format('.0f'));
+       .tickFormat(function(d) { return "" + Math.floor(d/60) + ":" + (d % 60) }).ticks(12);
 
    chart.yAxis
        .axisLabel('Travel Time (minutes)')
